@@ -9,4 +9,6 @@ router.get('/sign-up',usersCntroller.signUp);
 
 router.get('/sign-In',usersCntroller.signIn);
 
+router.post('/create',usersCntroller.create);
+
 module.exports = router;
