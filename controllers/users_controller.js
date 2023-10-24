@@ -2,10 +2,25 @@ const User = require('../models/user');
 
 module.exports.profile = function(req,res){
     // res.end("<h1>Users Profile!!!</h1>");
-
-    return res.render('users.ejs',{
-        title : "Users page"
-    });
+    // return res.render('users.ejs',{
+    //     title : "Users page"
+    // });  
+    if(req.cookies.user_id){
+        User.findById(req.cookies.user_id)
+            .then(user =>{
+                if(user){
+                    return res.render('users_profile',{
+                        title:"User Profile",
+                        user:user
+                    });   
+                }
+            })
+            .catch(err => {
+                console.log("User not able to sign In");
+            })
+    }else{
+        return res.redirect('/users/sign-In');
+    }
 }
 
 
@@ -65,5 +80,27 @@ module.exports.create = function(req,res){
 
 // sign in and create session for the user
 module.exports.create_session = function(req,res){
-    //Todo later
+
+    // Steps to athenticate
+    // find the user
+    User.findOne({email:req.body.email})
+        .then(user =>{
+            // handle user found
+            if(user){
+                // handle password which doesn't match
+                if(user.password != req.body.password){
+                    return res.redirect('back');
+                }
+                // handle session creation
+                res.cookie('user_id',user.id);
+                return res.redirect('/users/profile');
+            }else{
+                // handle user not found
+                return res.redirect('back');
+            }
+        })
+        .catch(err =>{
+            console.log("error in finding email in signing In");
+            return;
+        })
 };
