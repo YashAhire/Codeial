@@ -15,6 +15,17 @@ const passportLocal = require('./config/passport-local-strat');
 
 const MongoStore = require('connect-mongo');
 
+// SASS library
+const sassMiddleware = require('node-sass-middleware');
+
+app.use(sassMiddleware({
+    src: './assets/scss',
+    dest:'./assets/css',
+    debug: true,
+    outputStyle: 'extended',
+    prefix: '/css'
+}));
+
 app.use(express.urlencoded());
 app.use(cookieParser());
 
@@ -51,7 +62,7 @@ app.use(session({
             console.log(err || 'connect-mongodb setp ok!!');
         }
     )
-}));
+}));    
 
 app.use(passport.initialize());
 app.use(passport.session());
