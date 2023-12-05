@@ -1,0 +1,14 @@
+#footer_style {
+  height: 38px;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: cornflowerblue;
+  text-shadow: 0px 1px 2px azure; }
+  #footer_style li {
+    margin-right: 1em;
+    color: black; }
+    #footer_style li a {
+      color: black;
+      text-shadow: black; }

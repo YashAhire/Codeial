@@ -3,3 +3,7 @@ body {
   text-align: center; }
   body #main_body {
     height: 100%; }
+
+#post-list-container ul {
+  text-align: center;
+  display: inline-block; }

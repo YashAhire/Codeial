@@ -1,4 +1,4 @@
-ul {
+#header_style {
   height: 38px;
   list-style-type: none;
   display: flex;
@@ -6,9 +6,9 @@ ul {
   justify-content: flex-end;
   background-color: cornflowerblue;
   text-shadow: 0px 1px 2px azure; }
-  ul li {
+  #header_style li {
     margin-right: 1em;
     color: black; }
-    ul li a {
+    #header_style li a {
       color: black;
       text-shadow: black; }
