@@ -51,3 +51,20 @@ module.exports.create = function(req, res) {
             return res.status(404).send("Post not found");
         });
 };
+
+module.exports.destroy = function(req,res){
+    Comment.findById(req.params.id)
+        .then(comment => {
+            if(comment.user == req.user.id){
+                let postId = comment.post;
+                comment.deleteOne();
+                Post.findByIdAndUpdate(postId, { $pull : {comments: req.params.id}})
+                    .then(() => {
+                        return res.redirect('back');
+                    })
+            }
+            else{
+                return res.redirect('back');
+            }
+        });
+};

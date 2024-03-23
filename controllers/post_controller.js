@@ -24,7 +24,7 @@ module.exports.destroy = function(req,res){
                 .then(() => {
                     Comment.deleteMany({post: req.params.id})
                 })
-                .then( () =>{
+                .then(() =>{
                     return res.redirect('back');
                 })
             }
