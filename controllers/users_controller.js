@@ -6,7 +6,7 @@ module.exports.profile = function(req, res){
     //     title : "Users page"
     // });
 
-    // tihs is using for manual authentication 
+    // this is using for manual authentication 
     // if(req.cookies.user_id){
     //     User.findById(req.cookies.user_id)
     //         .then(user =>{
@@ -33,7 +33,16 @@ module.exports.profile = function(req, res){
         })
 };
 
-
+module.exports.update = function(req,res){
+    if(req.user.id == req.params.id){
+        User.findByIdAndUpdate(req.params.id, req.body)
+            .then(user => {
+                return res.redirect('back');
+            })
+    }else{
+        return res.status(401).send('Unauthorized');
+    }
+};
 
 // rener the Sign Up page
 module.exports.signUp = function(req,res){

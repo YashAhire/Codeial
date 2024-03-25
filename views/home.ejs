@@ -6,10 +6,11 @@
     </head>
 
     <%- include('_header'); %> -->
-    
-    <body>
+<link rel="stylesheet" href="/css/home.css">
+    <!-- <body>
         <h1> Codeial <%= title %></h1>
-    </body>
+    </body> -->
+<div id="home-container">    
     <section id="feed-post">
         <h4>Posts</h4>
         <% if(locals.user){ %>
@@ -27,7 +28,7 @@
         </div>
 
     </section>
-    <!-- Add section for display all user's on home page -->
+    <!-- Add section for display all user's on home -->
     <section id="user-friends">
         <h4>Friends</h4>
         <% for(u of all_users){ %>
@@ -36,6 +37,7 @@
             </p>
         <% } %>
     </section>
+</div>
     <!-- <%- include('_footer'); %>
 
 </html> -->
