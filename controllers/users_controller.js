@@ -23,9 +23,14 @@ module.exports.profile = function(req, res){
     // }else{
     //     return res.redirect('/users/sign-In');
     // }
-    return res.render('users_profile',{
-        title:"User Profile"
-    })
+
+    User.findById(req.params.id)
+        .then(user => {
+            return res.render('users_profile',{
+                title:"User Profile",
+                profile_user:user
+            })
+        })
 };
 
 
