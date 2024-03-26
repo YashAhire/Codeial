@@ -17,7 +17,9 @@ const MongoStore = require('connect-mongo');
 
 // SASS library
 const sassMiddleware = require('node-sass-middleware');
+// display flash msg
 const flash = require('connect-flash');
+// middleware for flash msg
 const customMW = require('./config/middleware');
 
 app.use(sassMiddleware({

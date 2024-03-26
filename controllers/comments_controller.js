@@ -39,15 +39,16 @@ module.exports.create = function(req, res) {
             })
             .then(() => {
                 // Redirect after successful creation
+                req.flash('success',"comment piblished!");
                 return res.redirect('/');
             })
             .catch(err => {
-                console.error("Error in creating post-comment's", err);
+                req.flash('error', err);
                 return res.status(500).send("Internal Server Error");
             });
         })
         .catch(err => {
-            console.error("Error in finding post", err);
+            req.flash('error', err);
             return res.status(404).send("Post not found");
         });
 };
@@ -60,6 +61,7 @@ module.exports.destroy = function(req,res){
                 comment.deleteOne();
                 Post.findByIdAndUpdate(postId, { $pull : {comments: req.params.id}})
                     .then(() => {
+                        req.flash('success',"comment deleted successfully!")
                         return res.redirect('back');
                     })
             }
@@ -68,7 +70,7 @@ module.exports.destroy = function(req,res){
             }
         })
         .catch(err =>{
-            console.log("Error:",err);
-            return;
+            req.flash("error:",err);
+            return res.redirect('back');
         });
 };

@@ -7,11 +7,12 @@ module.exports.create = function(req,res){
         user: req.user._id
     })
     .then(post => {  
+        req.flash('success', 'Post published!');
         return res.redirect('back');
     })
     .catch(err => {
-        console.error("Error in creating post", err);
-        return;
+        req.flash("error", err);
+        return res.redirect('back');
     })
 }
 
@@ -23,17 +24,19 @@ module.exports.destroy = function(req,res){
                 post.deleteOne()
                 .then(() => {
                     Comment.deleteMany({post: req.params.id})
+                    req.flash('success', 'Post & associated coments deleted!');
                 })
                 .then(() =>{
                     return res.redirect('back');
                 })
             }
             else{
+                req.flash('error', " you can't delete this post ");
                 return res.redirect('back');
             }
         })
         .catch(err =>{
-            console.log("Error:",err);
-            return;
+            req.flash("error", err);
+            return res.redirect('back');
         })
 }
