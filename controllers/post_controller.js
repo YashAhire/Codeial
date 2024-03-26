@@ -32,4 +32,8 @@ module.exports.destroy = function(req,res){
                 return res.redirect('back');
             }
         })
+        .catch(err =>{
+            console.log("Error:",err);
+            return;
+        })
 }
