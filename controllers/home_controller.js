@@ -7,6 +7,7 @@ module.exports.home = function(req, res){
     // res.cookie('user_id', 5);
 
     Post.find({})
+    .sort('-createdAt')
     .populate('user')
     .populate({
         path : 'comments',
@@ -20,7 +21,7 @@ module.exports.home = function(req, res){
             User.find({})
                 .then(users => {
                     return res.render('home', {
-                        title : " | Home  ",
+                        title : " Codeial| Home  ",
                         posts : posts,
                         all_users : users
                     });
@@ -28,7 +29,7 @@ module.exports.home = function(req, res){
 
         })
         .catch(err =>{
-            console.log("Error while finding posts!!");
+            console.log("Error!",err);
             return;
         })
 

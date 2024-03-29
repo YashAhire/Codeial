@@ -39,19 +39,29 @@ module.exports.create = function(req, res) {
             })
             .then(() => {
                 // Redirect after successful creation
+                if(req.xhr){
+                    comment.populate('user','name').execPopulate();
+
+                    return res.status(200).json({
+                        data:{
+                            comment:comment
+                        },
+                        message:'Post created!'
+                    });
+                }
                 req.flash('success',"comment piblished!");
                 return res.redirect('/');
             })
             .catch(err => {
                 req.flash('error', err);
-                return res.status(500).send("Internal Server Error");
-            });
+                return;
+            })
         })
         .catch(err => {
             req.flash('error', err);
-            return res.status(404).send("Post not found");
-        });
-};
+            return;
+        })
+}
 
 module.exports.destroy = function(req,res){
     Comment.findById(req.params.id)
@@ -61,16 +71,25 @@ module.exports.destroy = function(req,res){
                 comment.deleteOne();
                 Post.findByIdAndUpdate(postId, { $pull : {comments: req.params.id}})
                     .then(() => {
-                        req.flash('success',"comment deleted successfully!")
+                        if(req.xhr){
+                            return res.status(200).json({
+                                data:{
+                                    comment_id:req.params.id
+                                },
+                                message:"Post deleted!"
+                            });
+                        }
+                        req.flash('success',"comment deleted!")
                         return res.redirect('back');
                     })
             }
             else{
+                req.flash('error', 'Unauthorized');
                 return res.redirect('back');
             }
         })
         .catch(err =>{
             req.flash("error:",err);
             return res.redirect('back');
-        });
-};
+        })
+}

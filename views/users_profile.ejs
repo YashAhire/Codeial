@@ -1,30 +1,22 @@
-<!-- <html>
-    <head>
-        <title>
-            <%= title %>
-        </title>
-    </head>
 
-    <%- include('_header'); %> -->
-    
-    <link rel="stylesheet" href="/css/user_profile.css">
-    <body>
-        <h1> codeial / <%= title %></h1>
-    </body>
-    
-    <% if(user.id == profile_user.id){ %>
-        <!-- if user matches then show the form -->
-        <form action="/users/update/<%= profile_user.id %>" method="post">
-            <input type="text" name="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
-            <input type="email" name="email" placeholder="Your Email" value="<%= profile_user.email %>" required>
-            <input type="submit" value="Update">
-        </form>
-    <% }else{ %>
-        <!-- else show only the profle info -->
-        
-        <p>Name: <%= profile_user.name %></p>
-        <p>Email: <%= profile_user.email %></p>
-    <% } %>
-    <!-- <%- include('_footer'); %>
+<link rel="stylesheet" href="/css/user_profile.css">
+<body>
+    <h1> codeial / Profile Page</h1>
+</body>
 
-</html> -->
+<img src="<%= user.avatar %>" alt="<%= user.name %>" width="100">
+
+<% if(user.id == profile_user.id){ %>
+    <!-- if user matches then show the form -->
+    <form action="/users/update/<%= profile_user.id %>" enctype="multipart/form-data" method="post">
+        <input type="text" name="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
+        <input type="email" name="email" placeholder="Your Email" value="<%= profile_user.email %>" required>
+        <input type="file" name="avatar" placeholder="Profile Picture">
+        <input type="submit" value="Update">
+    </form>
+<% }else{ %>
+    <!-- else show only the profle info -->
+    
+    <p>Name: <%= profile_user.name %></p>
+    <p>Email: <%= profile_user.email %></p>
+<% } %>

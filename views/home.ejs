@@ -1,8 +1,6 @@
 
 <link rel="stylesheet" href="/css/home.css">
-    <!-- <body>
-        <h1> Codeial <%= title %></h1>
-    </body> -->
+    
 <div id="home-container">    
     <section id="feed-post">
         <h4>Posts</h4>
@@ -12,7 +10,7 @@
             <input type="submit" value="Post">
         </form>
         <% } %>
-        <div id = "post-list-container">
+        <div id ="post-list-container">
             <ul>
                 <% for(post of posts){ %>
                    <%- include('_post') -%> 
@@ -31,6 +29,5 @@
         <% } %>
     </section>
 </div>
-    <!-- <%- include('_footer'); %>
-
-</html> -->
+<script src="/js/home_posts.js"></script>
+<script src="/js/home_post_comments.js"></script>

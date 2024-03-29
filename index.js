@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const expressLayouts = require("express-ejs-layouts");
 
 const db = require('./config/mongoose');
- 
+
 // used for session cookies
 const session = require('express-session');
 const passport = require('passport');
@@ -35,6 +35,8 @@ app.use(cookieParser());
 
 // for using static files
 app.use(express.static('./assets'));
+// make the upload path available to browser
+app.use('/uploads',express.static(__dirname + '/uploads'));
 
 // for using partials and layouts
 app.use(expressLayouts);
@@ -71,7 +73,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
-
+// use flash lib
 app.use(flash());
 app.use(customMW.setFlash);
 //use express router
