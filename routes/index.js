@@ -9,6 +9,8 @@ router.get('/',homeController.home);
 router.use('/users',require('./users'));
 router.use('/post',require('./post'));
 router.use('/comment',require('./comments'));
+
+router.use('/api', require('./api'));
 // For any further routes, access from here
 // by using router.use('/routerName', require('./routerfile'))
 
