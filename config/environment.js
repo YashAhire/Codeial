@@ -1,7 +1,7 @@
 const fs = require('fs');
 const rfs = require('rotating-file-stream');
 const path = require('path');
-
+str = "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";
 const logDirectory = path.join(__dirname, '../production_logs');
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
@@ -26,7 +26,7 @@ const development = {
         }
     },
     google_clientID:"752490367499-8iasjqnpfnpla21sa80t2e1jlgcvl03u.apps.googleusercontent.com",
-    google_clientSecret:"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",
+    google_clientSecret:str,
     google_callbackURL:"http://localhost:8000/users/auth/google/callback",
     jwt_key_secret:'codeial',
     morgan:{
