@@ -1,95 +1,99 @@
-const Comment = require('../models/comments');
+const Comment = require('../models/comment');
 const Post = require('../models/post');
+const commentsMailer = require('../mailers/comments_mailer');
+const queue = require('../config/kue');
+const commentEmailWorker = require('../workers/comment_email_worker');
+const Like = require('../models/like');
 
-// module.exports.create = function(req,res){
-//     Post.findById(req.body.post)
-//         .then(post => {
-//             Comment.create({
-//                 content : req.body.content,
-//                 post : req.body.post,
-//                 user : req.user._id
-//             })
-//         })
-//         .then(comment => {
-//             post.comments.push(comment);
-//             post.save();
-//         })
-//         .then(() =>{
-//             return res.rediect('/');
-//         })
-//         .catch(err => {
-//             console.error("Error in creating post-comment's", err);
-//             return;
-//         })
-// }
+module.exports.create = async function(req, res){
 
-module.exports.create = function(req, res) {
-    Post.findById(req.body.post)
-        .then(post => {
-            // Create a comment
-            return Comment.create({
+    try{
+        let post = await Post.findById(req.body.post);
+
+        if (post){
+            let comment = await Comment.create({
                 content: req.body.content,
                 post: req.body.post,
                 user: req.user._id
-            })
-            .then(comment => {
-                // Push the comment to the post and save the post
-                post.comments.push(comment);
-                return post.save();
-            })
-            .then(() => {
-                // Redirect after successful creation
-                if(req.xhr){
-                    comment.populate('user','name').execPopulate();
+            });
 
-                    return res.status(200).json({
-                        data:{
-                            comment:comment
-                        },
-                        message:'Post created!'
-                    });
+            post.comments.push(comment);
+            post.save();
+            
+            comment = await comment.populate('user', 'name email').execPopulate();
+            // commentsMailer.newComment(comment);
+
+            let job = queue.create('emails', comment).save(function(err){
+                if (err){
+                    console.log('Error in sending to the queue', err);
+                    return;
                 }
-                req.flash('success',"comment piblished!");
-                return res.redirect('/');
+                console.log('job enqueued', job.id);
+
             })
-            .catch(err => {
-                req.flash('error', err);
-                return;
-            })
-        })
-        .catch(err => {
-            req.flash('error', err);
-            return;
-        })
+
+            if (req.xhr){
+                
+    
+                return res.status(200).json({
+                    data: {
+                        comment: comment
+                    },
+                    message: "Post created!"
+                });
+            }
+
+
+            req.flash('success', 'Comment published!');
+
+            res.redirect('/');
+        }
+    }catch(err){
+        req.flash('error', err);
+        return;
+    }
+    
 }
 
-module.exports.destroy = function(req,res){
-    Comment.findById(req.params.id)
-        .then(comment => {
-            if(comment.user == req.user.id){
-                let postId = comment.post;
-                comment.deleteOne();
-                Post.findByIdAndUpdate(postId, { $pull : {comments: req.params.id}})
-                    .then(() => {
-                        if(req.xhr){
-                            return res.status(200).json({
-                                data:{
-                                    comment_id:req.params.id
-                                },
-                                message:"Post deleted!"
-                            });
-                        }
-                        req.flash('success',"comment deleted!")
-                        return res.redirect('back');
-                    })
+
+module.exports.destroy = async function(req, res){
+
+    try{
+        let comment = await Comment.findById(req.params.id);
+
+        if (comment.user == req.user.id){
+
+            let postId = comment.post;
+
+            comment.deleteOne();
+
+            let post = Post.findByIdAndUpdate(postId, { $pull: {comments: req.params.id}});
+
+            // CHANGE :: destroy the associated likes for this comment
+            await Like.deleteMany({likeable: comment._id, onModel: 'Comment'});
+
+
+            // send the comment id which was deleted back to the views
+            if (req.xhr){
+                return res.status(200).json({
+                    data: {
+                        comment_id: req.params.id
+                    },
+                    message: "Post deleted"
+                });
             }
-            else{
-                req.flash('error', 'Unauthorized');
-                return res.redirect('back');
-            }
-        })
-        .catch(err =>{
-            req.flash("error:",err);
+
+
+            req.flash('success', 'Comment deleted!');
+
             return res.redirect('back');
-        })
+        }else{
+            req.flash('error', 'Unauthorized');
+            return res.redirect('back');
+        }
+    }catch(err){
+        req.flash('error', err);
+        return;
+    }
+    
 }

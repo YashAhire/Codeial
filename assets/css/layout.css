@@ -1,9 +1,5 @@
 body {
   margin: 0;
-  text-align: center; }
-  body #main_body {
+  /* text-align: center; */ }
+  body #layout-main {
     height: 100%; }
-
-#post-list-container ul {
-  text-align: center;
-  display: inline-block; }
