@@ -8,7 +8,7 @@ fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 const accessLogStream = rfs('access.log',{
     interval:'1d',
     path:logDirectory
-})
+});
 
 const development = {
     name:'development',
